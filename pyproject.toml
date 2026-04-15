@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "smart-doc-analyzer"
+version = "0.1.0"
+description = "Analisador inteligente de documentos: detecta características e recomenda o melhor modelo de processamento (local leve, local pesado ou nuvem)."
+requires-python = ">=3.10"
+
+dependencies = [
+    "PyPDF2>=3.0.0",
+    "pdfplumber>=0.10.0",
+    "pypdfium2>=4.0.0",
+    "pytesseract>=0.3.10",
+    "opencv-python-headless>=4.8.0",
+    "numpy>=1.24.0",
+    "Pillow>=10.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-cov",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["doc_analyzer*"]

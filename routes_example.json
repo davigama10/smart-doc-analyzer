@@ -1,0 +1,91 @@
+{
+  "_comment": "Arquivo de configuração de rotas do smart-doc-analyzer. Rotas são avaliadas em ordem de prioridade (menor = primeiro).",
+
+  "routes": [
+    {
+      "name": "manuscrito-cloud",
+      "priority": 1,
+      "conditions": {
+        "is_handwritten": true
+      },
+      "recommendation": {
+        "tier": "cloud",
+        "model": "gemini-pro-vision",
+        "reason": "Manuscritos requerem modelos de visão avançados — enviar para nuvem."
+      }
+    },
+    {
+      "name": "nativo-digital-sem-ocr",
+      "priority": 2,
+      "conditions": {
+        "doc_type": ["native_digital"],
+        "text_density_min": 0.8,
+        "avg_chars_per_page_min": 500,
+        "image_density_max": 0.0
+      },
+      "recommendation": {
+        "tier": "none",
+        "model": null,
+        "reason": "PDF nativo digital com texto selecionável e sem imagens — OCR desnecessário."
+      }
+    },
+    {
+      "name": "nativo-digital-com-imagens",
+      "priority": 3,
+      "conditions": {
+        "doc_type": ["native_digital"],
+        "text_density_min": 0.8,
+        "image_density_min": 0.1
+      },
+      "recommendation": {
+        "tier": "local_light",
+        "model": "paddle",
+        "reason": "PDF nativo digital com imagens embutidas — OCR leve para extrair texto das imagens."
+      }
+    },
+    {
+      "name": "escaneado-complexo-local-pesado",
+      "priority": 4,
+      "conditions": {
+        "doc_type": ["scanned", "image_based"],
+        "image_density_min": 0.7
+      },
+      "recommendation": {
+        "tier": "local_heavy",
+        "model": "qwen3",
+        "reason": "Documento escaneado com alta densidade de imagens — modelo vision local pesado."
+      }
+    },
+    {
+      "name": "hibrido-com-tabelas-local-pesado",
+      "priority": 5,
+      "conditions": {
+        "doc_type": ["hybrid"],
+        "table_density_min": 0.3
+      },
+      "recommendation": {
+        "tier": "local_heavy",
+        "model": "deepseek",
+        "reason": "Documento híbrido com tabelas — DeepSeek para extração estruturada."
+      }
+    },
+    {
+      "name": "escaneado-simples-local-leve",
+      "priority": 6,
+      "conditions": {
+        "doc_type": ["scanned", "hybrid", "minimal_text", "image_based"]
+      },
+      "recommendation": {
+        "tier": "local_light",
+        "model": "paddle",
+        "reason": "Documento escaneado sem complexidade especial — PaddleOCR suficiente."
+      }
+    }
+  ],
+
+  "default": {
+    "tier": "local_light",
+    "model": "paddle",
+    "reason": "Nenhuma rota compatível encontrada. Usando PaddleOCR como fallback padrão."
+  }
+}
