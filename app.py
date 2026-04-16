@@ -6,7 +6,7 @@ from fastapi.responses import HTMLResponse, JSONResponse
 from doc_analyzer import DocAnalyzer
 
 app = FastAPI()
-analyzer = DocAnalyzer(routes_config="routes_example.json", use_ollama=True)
+analyzer = DocAnalyzer(routes_config="routes_example.json")
 
 HTML = """
 <!DOCTYPE html>

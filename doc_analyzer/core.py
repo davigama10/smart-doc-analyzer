@@ -25,8 +25,8 @@ class DocAnalyzer:
     Detecta automaticamente o tipo do arquivo, seleciona o analisador
     correto e, opcionalmente, roteia o documento para o modelo ideal.
 
-    Uso básico (regras + LLM):
-        analyzer = DocAnalyzer(routes_config="routes.json", use_llm=True)
+    Uso básico (regras + Ollama):
+        analyzer = DocAnalyzer(routes_config="routes.json")
         result = analyzer.analyze_and_route_full("documento.pdf")
         print(result.rule_recommendation.tier)
         print(result.llm_recommendation.tier)
@@ -51,10 +51,7 @@ class DocAnalyzer:
         self,
         routes_config: Optional[str] = None,
         router: Optional[BaseRouter] = None,
-        use_llm: bool = False,
         llm_router: Optional[BaseRouter] = None,
-        llm_api_key: Optional[str] = None,
-        use_ollama: bool = False,
         ollama_model: str = "llama3.2",
         ollama_host: str = "http://host.docker.internal:11434",
     ):
@@ -63,11 +60,8 @@ class DocAnalyzer:
             routes_config: Caminho para o JSON de rotas (usa RuleBasedRouter).
             router:        Instância de BaseRouter customizado para regras.
                            Se fornecido, ignora routes_config.
-            use_llm:       Se True, instancia um LLMRouter (Claude/Anthropic).
             llm_router:    Instância de BaseRouter customizado para LLM.
-                           Se fornecido, ignora use_llm e use_ollama.
-            llm_api_key:   Chave da API Anthropic. Se None, usa ANTHROPIC_API_KEY do ambiente.
-            use_ollama:    Se True, instancia um OllamaRouter (LLM local, gratuito).
+                           Se fornecido, ignora ollama_model e ollama_host.
             ollama_model:  Modelo Ollama a usar (ex: llama3.2, qwen2.5:3b, mistral).
             ollama_host:   URL do servidor Ollama.
         """
@@ -85,14 +79,9 @@ class DocAnalyzer:
 
         if llm_router:
             self._llm_router: Optional[BaseRouter] = llm_router
-        elif use_ollama:
+        else:
             from .router.ollama_router import OllamaRouter
             self._llm_router = OllamaRouter(model=ollama_model, host=ollama_host)
-        elif use_llm:
-            from .router.llm_router import LLMRouter
-            self._llm_router = LLMRouter(api_key=llm_api_key)
-        else:
-            self._llm_router = None
 
     # ------------------------------------------------------------------
     # API pública
@@ -156,8 +145,7 @@ class DocAnalyzer:
         """
         Analisa o documento e retorna perfil + recomendação por regras + recomendação da LLM.
 
-        Requer que o DocAnalyzer tenha sido instanciado com use_llm=True (ou llm_router).
-        Requer também um roteador de regras (routes_config ou router).
+        Requer um roteador de regras (routes_config ou router).
 
         Args:
             file_path: Caminho do arquivo.
@@ -173,12 +161,6 @@ class DocAnalyzer:
                 "Roteador de regras não configurado. "
                 "Passe routes_config ou router ao instanciar DocAnalyzer."
             )
-        if not self._llm_router:
-            raise RuntimeError(
-                "LLM router não configurado. "
-                "Passe use_llm=True ou llm_router ao instanciar DocAnalyzer."
-            )
-
         profile = self.analyze(file_path)
         rule_rec = self._router.route(profile)
         llm_rec = self._llm_router.route(profile)

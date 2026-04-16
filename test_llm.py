@@ -21,7 +21,7 @@ MODEL = sys.argv[2] if len(sys.argv) > 2 else "llama3.2"
 print(f"\nAnalisando: {PDF}")
 print(f"Modelo Ollama: {MODEL}\n")
 
-analyzer = DocAnalyzer(routes_config="routes_example.json", use_ollama=True, ollama_model=MODEL)
+analyzer = DocAnalyzer(routes_config="routes_example.json", ollama_model=MODEL)
 result = analyzer.analyze_and_route_full(PDF)
 
 p = result.profile

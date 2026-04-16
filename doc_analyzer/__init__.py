@@ -1,7 +1,7 @@
 from .core import DocAnalyzer, FullAnalysisResult
 from .profile import DocumentProfile, ProcessingRecommendation, DocType, FileType, ProcessingTier
 from .analyzers import PDFAnalyzer, ImageAnalyzer, BaseAnalyzer
-from .router import RuleBasedRouter, BaseRouter, LLMRouter, OllamaRouter
+from .router import RuleBasedRouter, BaseRouter, OllamaRouter
 
 __all__ = [
     "DocAnalyzer",
@@ -16,6 +16,5 @@ __all__ = [
     "BaseAnalyzer",
     "RuleBasedRouter",
     "BaseRouter",
-    "LLMRouter",
     "OllamaRouter",
 ]

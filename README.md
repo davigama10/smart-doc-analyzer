@@ -32,7 +32,7 @@ ollama pull llama3.2
 cp .env.example .env
 ```
 
-> O `.env` pode ficar vazio para uso com Ollama. Só é necessário preencher `ANTHROPIC_API_KEY` caso queira usar o router Claude.
+> O `.env` não precisa de nenhuma variável para uso com Ollama.
 
 ### 4. Suba o container
 
@@ -114,8 +114,7 @@ smart-doc-analyzer/
 │   │   └── image.py              # ImageAnalyzer
 │   └── router/
 │       ├── rule_based.py         # RuleBasedRouter (JSON)
-│       ├── ollama_router.py      # OllamaRouter (LLM local)
-│       └── llm_router.py         # LLMRouter (Claude/Anthropic)
+│       └── ollama_router.py      # OllamaRouter (LLM local via Ollama)
 ├── routes_example.json           # Configuração de rotas
 ├── Dockerfile
 └── docker-compose.yml

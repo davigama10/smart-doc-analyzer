@@ -29,15 +29,11 @@ RUN pip install --no-cache-dir \
     opencv-python-headless>=4.8.0 \
     numpy>=1.24.0 \
     Pillow>=10.0.0 \
-    anthropic>=0.50.0 \
     pydantic>=2.0.0 \
     ollama>=0.3.0 \
     fastapi>=0.110.0 \
     uvicorn>=0.29.0 \
     python-multipart>=0.0.9
-
-# Chave da API Anthropic (passe via -e ou no docker-compose)
-ENV ANTHROPIC_API_KEY=""
 
 EXPOSE 8000
 
