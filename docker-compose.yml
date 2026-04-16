@@ -2,10 +2,11 @@ services:
   smart-doc-analyzer:
     build: .
     container_name: smart-doc-analyzer
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "8000:8000"
     volumes:
-      # Pasta local onde você coloca os PDFs/imagens para testar
-      - ./docs:/docs
-      # Monta o arquivo de rotas para permitir edição sem rebuild
       - ./routes_example.json:/app/routes_example.json
-    # Passa o arquivo como argumento: docker compose run smart-doc-analyzer /docs/arquivo.pdf
-    entrypoint: ["python", "test_quick.py"]

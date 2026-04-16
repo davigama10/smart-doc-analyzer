@@ -18,6 +18,8 @@ COPY pyproject.toml ./
 COPY doc_analyzer/ ./doc_analyzer/
 COPY routes_example.json ./
 COPY test_quick.py ./
+COPY test_llm.py ./
+COPY app.py ./
 
 RUN pip install --no-cache-dir \
     PyPDF2>=3.0.0 \
@@ -26,9 +28,17 @@ RUN pip install --no-cache-dir \
     pytesseract>=0.3.10 \
     opencv-python-headless>=4.8.0 \
     numpy>=1.24.0 \
-    Pillow>=10.0.0
+    Pillow>=10.0.0 \
+    anthropic>=0.50.0 \
+    pydantic>=2.0.0 \
+    ollama>=0.3.0 \
+    fastapi>=0.110.0 \
+    uvicorn>=0.29.0 \
+    python-multipart>=0.0.9
 
-# Diretório onde o usuário vai montar os documentos para teste
-VOLUME ["/docs"]
+# Chave da API Anthropic (passe via -e ou no docker-compose)
+ENV ANTHROPIC_API_KEY=""
 
-CMD ["python", "test_quick.py"]
+EXPOSE 8000
+
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
