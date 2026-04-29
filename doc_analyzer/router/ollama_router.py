@@ -41,8 +41,8 @@ class OllamaRouter(BaseRouter):
     """
     Roteador baseado em Ollama (LLM local, gratuito).
 
-    Requer Ollama rodando na máquina host (https://ollama.com).
-    Dentro do Docker, usa host.docker.internal para alcançar o host.
+    Requer o serviço ollama rodando via docker-compose (container ollama-service).
+    O host padrão usa o nome do serviço Docker; para rodar fora do Docker, passe localhost.
 
     Uso:
         router = OllamaRouter()                           # modelo padrão: llama3.2
@@ -53,14 +53,14 @@ class OllamaRouter(BaseRouter):
     def __init__(
         self,
         model: str = "llama3.2",
-        host: str = "http://host.docker.internal:11434",
+        host: str = "http://ollama:11434",
     ):
         """
         Args:
             model: Modelo Ollama a usar. Precisa estar baixado (ollama pull <model>).
                    Sugestões: llama3.2, qwen2.5:3b, mistral, gemma3:4b
             host:  URL do servidor Ollama.
-                   Dentro do Docker: http://host.docker.internal:11434 (padrão)
+                   Dentro do Docker: http://ollama:11434 (padrão, nome do serviço)
                    Fora do Docker:   http://localhost:11434
         """
         self._model = model

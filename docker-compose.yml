@@ -1,12 +1,39 @@
 services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama-service
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    entrypoint: ["/bin/bash", "-c", "ollama serve & until ollama list 2>/dev/null; do sleep 1; done; until ollama pull llama3.2; do echo 'Pull failed, retrying in 5s...'; sleep 5; done; wait"]
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
   smart-doc-analyzer:
     build: .
     container_name: smart-doc-analyzer
     env_file:
       - .env
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
     ports:
       - "8000:8000"
     volumes:
       - ./routes_example.json:/app/routes_example.json
+    depends_on:
+      ollama:
+        condition: service_healthy
+
+volumes:
+  ollama_data:
