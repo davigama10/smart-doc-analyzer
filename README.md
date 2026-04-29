@@ -7,7 +7,8 @@ Biblioteca Python que analisa documentos (PDF e imagens), classifica seu tipo e 
 ## Pré-requisitos
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop/)
-- [Ollama](https://ollama.com/download)
+
+> O Ollama roda como container — não é necessário instalá-lo na máquina.
 
 ---
 
@@ -20,13 +21,7 @@ git clone https://github.com/davigama10/smart-doc-analyzer.git
 cd smart-doc-analyzer
 ```
 
-### 2. Baixe o modelo LLM
-
-```bash
-ollama pull llama3.2
-```
-
-### 3. Crie o arquivo de ambiente
+### 2. Crie o arquivo de ambiente
 
 ```bash
 cp .env.example .env
@@ -34,11 +29,13 @@ cp .env.example .env
 
 > O `.env` não precisa de nenhuma variável para uso com Ollama.
 
-### 4. Suba o container
+### 3. Suba os containers
 
 ```bash
 docker compose up --build
 ```
+
+> O modelo `llama3.2` é baixado automaticamente na primeira execução.
 
 A aplicação estará disponível em **http://localhost:8000**
 
