@@ -81,6 +81,30 @@ Resposta:
 
 ---
 
+## Campos do perfil (`profile`)
+
+| Campo | Tipo | O que significa |
+|---|---|---|
+| `doc_type` | string | Classificação do documento (ver tabela abaixo) |
+| `num_pages` | inteiro | Número total de páginas do arquivo |
+| `text_density` | percentual | Proporção de páginas com texto selecionável (>50 caracteres). `100%` = todas as páginas têm texto embutido |
+| `image_density` | percentual | Proporção de páginas que contêm pelo menos uma imagem embutida no PDF. `100%` = todas as páginas têm imagem |
+| `has_tables` | booleano | `true` se pelo menos uma tabela foi detectada na estrutura do PDF |
+| `is_handwritten` | booleano | `true` se o documento parece manuscrito — detectado quando a média de palavras reconhecidas por OCR é inferior a 10 ou a confiança média do Tesseract é inferior a 60% |
+
+### Valores de `doc_type`
+
+| Valor | Significado | Critério |
+|---|---|---|
+| `native_digital` | PDF gerado digitalmente com texto selecionável | ≥80% das páginas com texto **e** ≥500 chars/página em média |
+| `scanned` | Documento escaneado (imagem) | ≥80% das páginas com imagem **e** <100 chars/página |
+| `hybrid` | Misto de texto e imagens | ≥40% das páginas com imagem **e** ≥40% com texto |
+| `image_based` | Majoritariamente imagens, sem ser escaneado puro | ≥60% das páginas com imagem |
+| `minimal_text` | Texto presente mas muito esparso | Texto detectado com <200 chars/página em média |
+| `handwritten` | Manuscrito | Detectado por baixa confiança ou poucos tokens via OCR |
+
+---
+
 ## Tiers de processamento
 
 | Tier | Quando usar | Modelo sugerido |
